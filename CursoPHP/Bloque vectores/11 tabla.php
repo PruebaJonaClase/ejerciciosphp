@@ -7,7 +7,7 @@
     <link rel="stylesheet" src="estilos.css">
 </head>
 <body>
-
+<p>Texto de ejemplo</p>
 <?php
 
 $array1 = array("Coche"=>"2", "Escoba"=>"101", "Casa"=>"21", "Mesa"=>"7890", "Sofa"=>"92");
