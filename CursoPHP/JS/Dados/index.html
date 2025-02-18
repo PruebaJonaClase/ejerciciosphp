@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MODIFICACION</title>
+    <script>
+        function a(){
+            let x = Math.floor(Math.random()*6) + 1;
+            let y = Math.floor(Math.random()*6) + 1;
+            document.getElementById("img").src = "dados/" + x + ".png";
+            document.getElementById("img2").src = "dados/" + y + ".png";
+            let suma = x + y;
+            document.getElementById("p").textContent = suma;
+        }
+    </script>
+    <style>
+        img{
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lanzamiento de dado</h1>
+    <button type="button" onclick="a()">Lanzar</button>
+    <img id="img" src="dados/1.png">
+    <img id="img2" src="dados/2.png">
+    <p id="p"></p>
+
+
+    <p>Archivo modificado 1 vez</p>
+    
+</body>
+</html>

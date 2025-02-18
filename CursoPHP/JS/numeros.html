@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #contador {
+            font-size: 2em;
+            margin: 20px;
+        }
+        button {
+            font-size: 1em;
+            margin: 5px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Contador</h1>
+    <div id="contador">0</div>
+    <button onclick="modificarContador(1)">Añadir</button>
+    <button onclick="modificarContador(-1)">Quitar</button>
+    <button onclick="resetearContador()">Reset</button>
+
+    <script>
+        let contador = 0;
+
+        function modificarContador(valor) {
+            let nuevoValor = contador + valor;
+            if (nuevoValor < 0 || nuevoValor > 10) {
+                alert("El contador debe estar entre 0 y 10.");
+                return;
+            }
+            contador = nuevoValor;
+            document.getElementById("contador").innerText = contador;
+        }
+
+        function resetearContador() {
+            contador = 0;
+            document.getElementById("contador").innerText = contador;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego del Ahorcado</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #palabra {
+            font-size: 2em;
+            margin: 20px;
+        }
+        #mensaje {
+            color: red;
+            font-weight: bold;
+        }
+        button {
+            font-size: 1em;
+            margin: 5px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Juego del Ahorcado</h1>
+    <div id="palabra">Cargando...</div>
+    <input type="text" id="letra" maxlength="1">
+    <button onclick="adivinarLetra()">Adivinar</button>
+    <div id="mensaje"></div>
+    <script>
+        let palabra = "";
+        let palabraOculta = "";
+        let intentos = 6;
+
+        async function obtenerPalabra() {
+            const respuesta = await fetch('https://random-word-api.herokuapp.com/word?number=1');
+            const datos = await respuesta.json();
+            palabra = datos[0].toUpperCase();
+            palabraOculta = "_".repeat(palabra.length);
+            document.getElementById("palabra").innerText = palabraOculta;
+        }
+
+        function adivinarLetra() {
+            let letra = document.getElementById("letra").value.toUpperCase();
+            if (!letra.match(/[A-Z]/) || letra.length !== 1) {
+                alert("Por favor, introduce una letra válida.");
+                return;
+            }
+
+            let nuevaPalabraOculta = "";
+            let acierto = false;
+            for (let i = 0; i < palabra.length; i++) {
+                if (palabra[i] === letra) {
+                    nuevaPalabraOculta += letra;
+                    acierto = true;
+                } else {
+                    nuevaPalabraOculta += palabraOculta[i];
+                }
+            }
+
+            if (!acierto) {
+                intentos--;
+            }
+
+            palabraOculta = nuevaPalabraOculta;
+            document.getElementById("palabra").innerText = palabraOculta;
+
+            if (palabraOculta === palabra) {
+                document.getElementById("mensaje").innerText = "¡Felicidades! Has ganado.";
+            } else if (intentos === 0) {
+                document.getElementById("mensaje").innerText = "Has perdido. La palabra era: " + palabra;
+            }
+        }
+
+        obtenerPalabra();
+    </script>
+</body>
+</html>
