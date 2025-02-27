@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Productos</title>
+    <style>
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #showProductsBtn {
+            background-color: #008CBA;
+        }
+        #showProductsBtn:hover {
+            background-color: #007B9A;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Crear Producto</h2>
+        <form id="productForm">
+            <div class="form-group">
+                <label for="name">Nombre:</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="quantity">Cantidad:</label>
+                <input type="number" id="quantity" min="1" required>
+            </div>
+            <div class="form-group">
+                <label for="price">Precio:</label>
+                <input type="number" id="price" min="0.01" step="0.01" required>
+            </div>
+            <button type="submit">Crear Producto</button>
+            <button type="button" id="showProductsBtn">Mostrar Productos</button>
+        </form>
+    </div>
+
+    <script>
+        const apiUrl = 'https://crudcrud.com/api/1aa6575203864b6d991853cf1c11e5c6/products';
+
+        async function createProduct(product) {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(product)
+            });
+            return response.json();
+        }
+
+        async function getProducts() {
+            const response = await fetch(apiUrl);
+            return response.json();
+        }
+
+        async function updateProduct(productId, product) {
+            const response = await fetch(`${apiUrl}/${productId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(product)
+            });
+            return response.json();
+        }
+
+        async function deleteProduct(productId) {
+            await fetch(`${apiUrl}/${productId}`, {
+                method: 'DELETE'
+            });
+        }
+
+        // Manejador del formulario
+        document.getElementById('productForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const price = parseFloat(document.getElementById('price').value);
+
+            if (!name || isNaN(quantity) || quantity <= 0 || isNaN(price) || price <= 0) {
+                alert('Por favor, complete todos los campos correctamente:\n- El nombre no puede estar vacío\n- La cantidad debe ser mayor que 0\n- El precio debe ser mayor que 0');
+                return;
+            }
+
+            const product = { name, quantity, price };
+
+            try {
+                const result = await createProduct(product);
+                console.log('Producto creado:', result);
+                this.reset();
+                alert('Producto creado con éxito');
+            } catch (error) {
+                alert('Error al crear el producto: ' + error.message);
+            }
+        });
+
+        // Manejador del botón para mostrar productos
+        document.getElementById('showProductsBtn').addEventListener('click', async function() {
+            try {
+                const products = await getProducts();
+                console.log('Lista de productos (nombre y cantidad):');
+                products.forEach(product => {
+                    console.log(`Nombre: ${product.name}, Cantidad: ${product.quantity}`);
+                });
+                if (products.length === 0) {
+                    console.log('No hay productos registrados');
+                }
+            } catch (error) {
+                console.error('Error al obtener los productos:', error.message);
+            }
+        });
+    </script>
+</body>
+</html>
